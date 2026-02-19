@@ -1,91 +1,73 @@
-/* Reset some default styles for consistency */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
+    background-color: #2b2d42;
     line-height: 1.6;
     padding: 20px;
-    color: #333;
-}
-
-/* Navigation styling */
+    color: #f0f0f0; 
 .nav {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center items for better appearance */
-    gap: 15px; /* Space between links */
-    margin-bottom: 20px; /* Slightly more space for clarity */
-    background-color: #1e293b;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #3a1c71, #d76d77); 
     padding: 15px;
-    border-radius: 8px; /* Rounded corners for a softer look */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-
 .nav a {
     color: #ffffff;
     text-decoration: none;
     font-weight: 600;
-    padding: 8px 12px;
+    padding: 10px 16px;
     border-radius: 4px;
-    transition: background-color 0.3s, transform 0.2s, color 0.2s;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
 }
-
 .nav a:hover {
-    background-color: #374151; /* Slightly lighter for hover effect */
+    background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
-    color: #f3f4f6; /* Lighten text on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
-/* Container styling - making it more flexible and readable */
 .container {
-    max-width: 400px; /* Slightly wider for better readability */
+    max-width: 400px;
     margin: 40px auto;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #1f2233; 
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     transition: box-shadow 0.3s, transform 0.2s;
 }
-
 .container:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     transform: translateY(-2px);
 }
-
-/* Heading styles */
 .container h2 {
-    color: #1e293b;
+    color: #ef476f; 
     margin-bottom: 20px;
     text-align: center;
     font-size: 1.8em;
 }
-
-/* List styles for the stats */
 ul {
     list-style: none;
     padding: 0;
     margin-bottom: 20px;
 }
-
 li {
     font-size: 1.1em;
     margin-bottom: 10px;
-    padding: 8px 12px;
-    background-color: #f9fafb;
-    border-radius: 6px;
+    padding: 12px;
+    background-color: #3b3f52; 
+    border-radius: 8px;
     transition: background-color 0.3s;
 }
-
 li:hover {
-    background-color: #e2e8f0;
+    background-color: #4a4f63;
 }
-
-/* Paragraph styling for quick links */
 p {
     text-align: center;
     margin-top: 20px;
@@ -94,18 +76,16 @@ p {
 
 p a {
     text-decoration: none;
-    color: #1e293b;
+    color: #ef476f;
     font-weight: 600;
     margin: 0 8px;
     transition: color 0.3s, text-decoration 0.3s;
 }
 
 p a:hover {
-    color: #3b82f6;
+    color: #ff4b2b; 
     text-decoration: underline;
 }
-
-/* Responsive adjustments for smaller screens */
 @media (max-width: 500px) {
     .container {
         width: 90%;
