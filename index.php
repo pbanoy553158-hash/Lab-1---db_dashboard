@@ -1,25 +1,18 @@
 <?php
-// Include your database connection (assuming db.php sets up $conn)
 include "db.php";
-
-// Check if connection is established
-if (!$conn) {
-  die("Database connection failed: " . mysqli_connect_error());
-}
-
-// Fetch data
+ 
 $clients = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS c FROM clients"))['c'];
 $services = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS c FROM services"))['c'];
 $bookings = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS c FROM bookings"))['c'];
-
+ 
 $revRow = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount_paid),0) AS s FROM payments"));
 $revenue = $revRow['s'];
 ?>
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
   <title>Dashboard</title>
 </head>
 <body>
@@ -40,5 +33,6 @@ $revenue = $revRow['s'];
   <a href="/assessment_beginner/pages/clients_add.php">Add Client</a> |
   <a href="/assessment_beginner/pages/bookings_create.php">Create Booking</a>
 </p>
+ 
 </body>
 </html>
