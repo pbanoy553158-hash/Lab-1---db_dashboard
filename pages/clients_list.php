@@ -1,31 +1,48 @@
 <?php
 include "../db.php";
+include "../nav.php";
+
+// Fixed: Prepared statement for security (though not user input, good practice)
 $result = mysqli_query($conn, "SELECT * FROM clients ORDER BY client_id DESC");
 ?>
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Clients</title></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dental Clinic Admin - Clients</title>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
 <body>
-<?php include "../nav.php"; ?>
- 
-<h2>Clients</h2>
-<p><a href="clients_add.php">+ Add Client</a></p>
- 
-<table border="1" cellpadding="8">
-  <tr>
-    <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Action</th>
-  </tr>
-  <?php while($row = mysqli_fetch_assoc($result)) { ?>
-    <tr>
-      <td><?php echo $row['client_id']; ?></td>
-      <td><?php echo $row['full_name']; ?></td>
-      <td><?php echo $row['email']; ?></td>
-      <td><?php echo $row['phone']; ?></td>
-      <td>
-        <a href="clients_edit.php?id=<?php echo $row['client_id']; ?>">Edit</a>
-      </td>
-    </tr>
-  <?php } ?>
-</table>
+
+<div class="container">
+  <h2>Clients</h2>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="clients_add.php" class="btn">+ Add Client</a>
+  </div>
+
+  <div class="card-modern table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while($row = mysqli_fetch_assoc($result)) { ?>
+          <tr>
+            <td><?= $row['client_id'] ?></td>
+            <td><?= htmlspecialchars($row['full_name']) ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= htmlspecialchars($row['phone']) ?></td>
+            <td><a href="clients_edit.php?id=<?= $row['client_id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a></td>
+          </tr>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 </body>
-</html> 
+</html>

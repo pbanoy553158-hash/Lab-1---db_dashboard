@@ -1,4 +1,3 @@
-<?php // nav.php ?>
 <div class="nav">
   <a href="/assessment_beginner/index.php">Dashboard</a>
   <a href="/assessment_beginner/pages/clients_list.php">Clients</a>
