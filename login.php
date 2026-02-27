@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Already logged in? → go to dashboard
-if (isset($_SESSION['username'])) {
+// If already logged in → redirect
+if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
@@ -13,15 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    // For real app: query database
-    // For now: still using static credentials (you should change this later)
-    if ($username === "admin" && $password === "admin123") {   // ← changed password
-        $_SESSION['username'] = $username;
-        $_SESSION['login_time'] = time();
-        
-        // Optional: regenerate session ID to prevent fixation
+    if ($username === "admin" && $password === "admin123") {
         session_regenerate_id(true);
-        
+        $_SESSION['username']     = $username;
+        $_SESSION['login_time']   = time();
         header("Location: index.php");
         exit();
     } else {
@@ -39,27 +34,134 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="style.css?v=<?= time() ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
-        .login-card { 
-            background: linear-gradient(145deg, #1e293b, #1b2437);
-            border: 1px solid #2e3a55;
-            border-radius: 16px;
-            padding: 3rem 2.5rem;
-            width: 100%; max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg);
+            margin: 0;
+            overflow: hidden;
         }
-        .login-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .login-subtitle { color: #94a3b8; margin-bottom: 2rem; font-size: 0.95rem; }
-        .alert-error { 
-            background: rgba(239,68,68,0.15); color: #fca5a5; 
-            border: 1px solid rgba(239,68,68,0.3); padding: 0.9rem;
-            border-radius: 10px; margin-bottom: 1.5rem; text-align: center;
+
+        .login-card {
+            background: rgba(30, 41, 59, 0.82);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(59, 69, 94, 0.6);
+            border-radius: 20px;
+            padding: 3rem 2.6rem 2.8rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 
+                0 20px 50px -12px rgba(0,0,0,0.55),
+                inset 0 1px 0 rgba(255,255,255,0.06),
+                inset 0 -1px 0 rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-        input { width: 100%; padding: 0.9rem; border: 1px solid #384070; border-radius: 8px; background: #262f53; color: white; }
-        input:focus { border-color: #4fc1e9; outline: none; box-shadow: 0 0 0 3px rgba(79,193,233,0.2); }
-        .btn { width: 100%; margin-top: 0.5rem; }
+
+        .login-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 30px 70px -12px rgba(0,0,0,0.65),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .login-subtitle {
+            color: #94a3b8;
+            text-align: center;
+            font-size: 0.98rem;
+            margin-bottom: 2.2rem;
+        }
+
+        .alert-error {
+            background: rgba(248, 113, 113, 0.18);
+            border: 1px solid rgba(248, 113, 113, 0.35);
+            color: #fca5a5;
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.8rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 0.94rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 0.6rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            color: #f1f5f9;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+            background: rgba(15, 23, 42, 0.85);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22);
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.05rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.28s ease;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(59, 130, 246, 0.45);
+        }
+
+        .forgot {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: 0.92rem;
+        }
+
+        .forgot a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot a:hover {
+            color: #60a5fa;
+        }
     </style>
 </head>
 <body>
@@ -74,16 +176,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <form method="POST">
         <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" required autofocus>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus autocomplete="username">
         </div>
 
         <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
         </div>
 
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn">Sign In</button>
+
+        <div class="forgot">
+            <a href="#">Forgot password?</a>
+        </div>
     </form>
 </div>
 
