@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include "auth.php";     // ← same folder → no ../
 include "nav.php";
 
 $clients  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS c FROM clients"))['c'] ?? 0;

@@ -1,5 +1,6 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
 
 $sql = "

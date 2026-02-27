@@ -1,5 +1,6 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
 
 $clients = mysqli_query($conn,"SELECT * FROM clients ORDER BY full_name ASC");
@@ -11,7 +12,6 @@ if(isset($_POST['create'])){
   $booking_date=$_POST['booking_date'];
   $hours=(float)$_POST['hours'];
 
-  // Fixed: Prepared for rate query
   $stmt = $conn->prepare("SELECT hourly_rate FROM services WHERE service_id = ?");
   $stmt->bind_param("i", $service_id);
   $stmt->execute();

@@ -1,17 +1,16 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
 
 $booking_id=(int)$_GET['booking_id'];
 
-// Fixed: Prepared
 $stmt = $conn->prepare("SELECT * FROM bookings WHERE booking_id = ?");
 $stmt->bind_param("i", $booking_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $booking = $result->fetch_assoc();
 
-// Fixed: Prepared for sum
 $stmt = $conn->prepare("SELECT COALESCE(SUM(amount_paid),0) AS paid FROM payments WHERE booking_id = ?");
 $stmt->bind_param("i", $booking_id);
 $stmt->execute();
@@ -34,7 +33,6 @@ if(isset($_POST['pay'])){
     $stmt->bind_param("ids",$booking_id,$amount,$method);
     $stmt->execute();
 
-    // Re-query paid (prepared)
     $stmt = $conn->prepare("SELECT COALESCE(SUM(amount_paid),0) AS paid FROM payments WHERE booking_id = ?");
     $stmt->bind_param("i", $booking_id);
     $stmt->execute();
@@ -44,7 +42,6 @@ if(isset($_POST['pay'])){
     $new_balance=$booking['total_cost']-$total_paid2;
 
     if($new_balance<=0.009){
-      // Fixed: Prepared update
       $stmt = $conn->prepare("UPDATE bookings SET status='PAID' WHERE booking_id = ?");
       $stmt->bind_param("i", $booking_id);
       $stmt->execute();

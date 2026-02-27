@@ -1,6 +1,8 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
+
 $result = mysqli_query($conn,"SELECT * FROM services ORDER BY service_id DESC");
 ?>
 <!DOCTYPE html>

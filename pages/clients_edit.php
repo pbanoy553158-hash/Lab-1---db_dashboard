@@ -1,10 +1,10 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
 
 $id = (int)$_GET['id'];
 
-// Fixed: Prepared statement
 $stmt = $conn->prepare("SELECT * FROM clients WHERE client_id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();

@@ -1,6 +1,7 @@
 <?php
 include "../db.php";
 include "../nav.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 
 $message = "";
 if(isset($_POST['save'])){

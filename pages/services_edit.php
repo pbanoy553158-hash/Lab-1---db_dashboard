@@ -1,65 +1,96 @@
 <?php
 include "../db.php";
-include "../nav.php";
-
-$id=(int)$_GET['id'];
-
-// Fixed: Prepared
-$stmt = $conn->prepare("SELECT * FROM services WHERE service_id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$service = $result->fetch_assoc();
-
-$message="";
-
-if(isset($_POST['update'])){
-  $name=$_POST['service_name'];
-  $desc=$_POST['description'];
-  $rate=$_POST['hourly_rate'];
-  $active=$_POST['is_active'];
-
-  $stmt=$conn->prepare("UPDATE services SET service_name=?,description=?,hourly_rate=?,is_active=? WHERE service_id=?");
-  $stmt->bind_param("ssdii",$name,$desc,$rate,$active,$id);
-  $stmt->execute();
+ include "../auth.php";    // or include "auth.php";  depending on folder
+ 
+/* ============================
+   SOFT DELETE (Deactivate)
+   ============================ */
+if (isset($_GET['delete_id'])) {
+  $delete_id = $_GET['delete_id'];
+ 
+ 
+  // Soft delete (set is_active to 0)
+  mysqli_query($conn, "UPDATE services SET is_active=0 WHERE service_id=$delete_id");
+ 
+ 
   header("Location: services_list.php");
   exit;
 }
+ 
+ 
+/* ============================
+   FETCH ALL SERVICES
+   ============================ */
+$result = mysqli_query($conn, "SELECT * FROM services ORDER BY service_id DESC");
 ?>
-<!DOCTYPE html>
-<html lang="en">
+ 
+ 
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dental Clinic Admin - Edit Service</title>
-  <link rel="stylesheet" href="../style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Services</title>
 </head>
 <body>
-
-<div class="container">
-  <h2>Edit Service</h2>
-  <div class="card-modern" style="max-width:600px;">
-    <form method="post">
-      <label>Service Name</label>
-      <input type="text" name="service_name" value="<?= htmlspecialchars($service['service_name']) ?>" required>
-
-      <label>Description</label>
-      <textarea name="description" rows="4"><?= htmlspecialchars($service['description']) ?></textarea>
-
-      <label>Hourly Rate</label>
-      <input type="number" name="hourly_rate" step="0.01" value="<?= $service['hourly_rate'] ?>" required>
-
-      <label>Active</label>
-      <select name="is_active">
-        <option value="1" <?= $service['is_active']==1?"selected":"" ?>>Yes</option>
-        <option value="0" <?= $service['is_active']==0?"selected":"" ?>>No</option>
-      </select>
-
-      <button type="submit" name="update" class="btn">Update</button>
-    </form>
-  </div>
-</div>
-
+ 
+ 
+<?php include "../nav.php"; ?>
+ 
+ 
+<h2>Services</h2>
+ 
+ 
+<p>
+  <a href="services_add.php">+ Add Service</a>
+</p>
+ 
+ 
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Rate</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+ 
+ 
+  <?php while($row = mysqli_fetch_assoc($result)) { ?>
+    <tr>
+      <td><?php echo $row['service_id']; ?></td>
+      <td><?php echo $row['service_name']; ?></td>
+      <td>₱<?php echo number_format($row['hourly_rate'],2); ?></td>
+ 
+ 
+      <td>
+        <?php
+          if ($row['is_active'] == 1) {
+            echo "Active";
+          } else {
+            echo "Inactive";
+          }
+        ?>
+      </td>
+ 
+ 
+      <td>
+        <a href="services_edit.php?id=<?php echo $row['service_id']; ?>">Edit</a>
+ 
+ 
+        <?php if ($row['is_active'] == 1) { ?>
+          |
+          <a href="services_list.php?delete_id=<?php echo $row['service_id']; ?>"
+             onclick="return confirm('Deactivate this service?')">
+             Deactivate
+          </a>
+        <?php } ?>
+      </td>
+    </tr>
+  <?php } ?>
+ 
+ 
+</table>
+ 
+ 
 </body>
 </html>

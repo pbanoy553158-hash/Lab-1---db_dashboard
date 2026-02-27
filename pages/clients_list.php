@@ -1,8 +1,8 @@
 <?php
 include "../db.php";
+include "../auth.php";    // or include "auth.php";  depending on folder
 include "../nav.php";
 
-// Fixed: Prepared statement for security (though not user input, good practice)
 $result = mysqli_query($conn, "SELECT * FROM clients ORDER BY client_id DESC");
 ?>
 <!DOCTYPE html>
